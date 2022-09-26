@@ -1,0 +1,153 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="hastaliklarBitkilerModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <ComplexType Name="bitkiBul_Result">
+    <Property Name="hastalikAdiTr" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+  </ComplexType>
+  <ComplexType Name="hastalikBul_Result">
+    <Property Name="bitkiAdiTr" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+  </ComplexType>
+  <EntityType Name="sysdiagrams">
+    <Key>
+      <PropertyRef Name="diagram_id" />
+    </Key>
+    <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="principal_id" Type="Int32" Nullable="false" />
+    <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="version" Type="Int32" />
+    <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="TBL_BITKI">
+    <Key>
+      <PropertyRef Name="bitkiID" />
+    </Key>
+    <Property Name="bitkiID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="bitkiAdiTr" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="bitkiAdiLatince" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="bitkiFoto" Type="String" MaxLength="500" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="bitkiAciklama" Type="String" MaxLength="5000" FixedLength="false" Unicode="false" Nullable="false" />
+    <NavigationProperty Name="TBLRecete" Relationship="Self.FK_TBLRecete_TBL_BITKI" FromRole="TBL_BITKI" ToRole="TBLRecete" />
+  </EntityType>
+  <EntityType Name="TBL_HASTALIK">
+    <Key>
+      <PropertyRef Name="hastalikID" />
+    </Key>
+    <Property Name="hastalikID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="hastalikAdiTr" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="hastalikAdiLatince" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="hastalikGrubu" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="hastalikTanim" Type="String" MaxLength="500" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="hastalikAciklama" Type="String" MaxLength="5000" FixedLength="false" Unicode="false" Nullable="false" />
+    <NavigationProperty Name="TBLRecete" Relationship="Self.FK_TBLRecete_TBL_HASTALIK" FromRole="TBL_HASTALIK" ToRole="TBLRecete" />
+  </EntityType>
+  <EntityType Name="TBL_KULLANICI">
+    <Key>
+      <PropertyRef Name="kullaniciID" />
+    </Key>
+    <Property Name="kullaniciID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="kullaniciAdi" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="kullaniciSoyadi" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="kullaniciMail" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="kullaniciSifre" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="kullaniciYoneticiMi" Type="Int32" />
+  </EntityType>
+  <EntityType Name="TBLRecete">
+    <Key>
+      <PropertyRef Name="receteID" />
+    </Key>
+    <Property Name="receteID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="receteHastalikID" Type="Int32" Nullable="false" />
+    <Property Name="receteBitkiID" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="TBL_BITKI" Relationship="Self.FK_TBLRecete_TBL_BITKI" FromRole="TBLRecete" ToRole="TBL_BITKI" />
+    <NavigationProperty Name="TBL_HASTALIK" Relationship="Self.FK_TBLRecete_TBL_HASTALIK" FromRole="TBLRecete" ToRole="TBL_HASTALIK" />
+  </EntityType>
+  <Association Name="FK_TBLRecete_TBL_BITKI">
+    <End Role="TBL_BITKI" Type="Self.TBL_BITKI" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="TBLRecete" Type="Self.TBLRecete" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="TBL_BITKI">
+        <PropertyRef Name="bitkiID" />
+      </Principal>
+      <Dependent Role="TBLRecete">
+        <PropertyRef Name="receteBitkiID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_TBLRecete_TBL_HASTALIK">
+    <End Role="TBL_HASTALIK" Type="Self.TBL_HASTALIK" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="TBLRecete" Type="Self.TBLRecete" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="TBL_HASTALIK">
+        <PropertyRef Name="hastalikID" />
+      </Principal>
+      <Dependent Role="TBLRecete">
+        <PropertyRef Name="receteHastalikID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="hastaliklarBitkilerEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" />
+    <EntitySet Name="TBL_BITKI" EntityType="Self.TBL_BITKI" />
+    <EntitySet Name="TBL_HASTALIK" EntityType="Self.TBL_HASTALIK" />
+    <EntitySet Name="TBL_KULLANICI" EntityType="Self.TBL_KULLANICI" />
+    <EntitySet Name="TBLRecete" EntityType="Self.TBLRecete" />
+    <AssociationSet Name="FK_TBLRecete_TBL_BITKI" Association="Self.FK_TBLRecete_TBL_BITKI">
+      <End Role="TBL_BITKI" EntitySet="TBL_BITKI" />
+      <End Role="TBLRecete" EntitySet="TBLRecete" />
+    </AssociationSet>
+    <AssociationSet Name="FK_TBLRecete_TBL_HASTALIK" Association="Self.FK_TBLRecete_TBL_HASTALIK">
+      <End Role="TBL_HASTALIK" EntitySet="TBL_HASTALIK" />
+      <End Role="TBLRecete" EntitySet="TBLRecete" />
+    </AssociationSet>
+    <FunctionImport Name="bitkiBul" IsComposable="true" ReturnType="Collection(hastaliklarBitkilerModel.bitkiBul_Result)">
+      <Parameter Name="id" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="hastalikBul" IsComposable="true" ReturnType="Collection(hastaliklarBitkilerModel.hastalikBul_Result)">
+      <Parameter Name="id" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="sp_alterdiagram">
+      <Parameter Name="diagramname" Mode="In" Type="String" />
+      <Parameter Name="owner_id" Mode="In" Type="Int32" />
+      <Parameter Name="version" Mode="In" Type="Int32" />
+      <Parameter Name="definition" Mode="In" Type="Binary" />
+    </FunctionImport>
+    <FunctionImport Name="sp_creatediagram">
+      <Parameter Name="diagramname" Mode="In" Type="String" />
+      <Parameter Name="owner_id" Mode="In" Type="Int32" />
+      <Parameter Name="version" Mode="In" Type="Int32" />
+      <Parameter Name="definition" Mode="In" Type="Binary" />
+    </FunctionImport>
+    <FunctionImport Name="sp_dropdiagram">
+      <Parameter Name="diagramname" Mode="In" Type="String" />
+      <Parameter Name="owner_id" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="sp_helpdiagramdefinition" ReturnType="Collection(hastaliklarBitkilerModel.sp_helpdiagramdefinition_Result)">
+      <Parameter Name="diagramname" Mode="In" Type="String" />
+      <Parameter Name="owner_id" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="sp_helpdiagrams" ReturnType="Collection(hastaliklarBitkilerModel.sp_helpdiagrams_Result)">
+      <Parameter Name="diagramname" Mode="In" Type="String" />
+      <Parameter Name="owner_id" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="sp_renamediagram">
+      <Parameter Name="diagramname" Mode="In" Type="String" />
+      <Parameter Name="owner_id" Mode="In" Type="Int32" />
+      <Parameter Name="new_diagramname" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="sp_upgraddiagrams" />
+  </EntityContainer>
+  <ComplexType Name="sp_helpdiagramdefinition_Result">
+    <Property Type="Int32" Name="version" Nullable="true" />
+    <Property Type="Binary" Name="definition" Nullable="true" />
+  </ComplexType>
+  <ComplexType Name="sp_helpdiagrams_Result">
+    <Property Type="String" Name="Database" Nullable="true" MaxLength="128" />
+    <Property Type="String" Name="Name" Nullable="false" MaxLength="128" />
+    <Property Type="Int32" Name="ID" Nullable="false" />
+    <Property Type="String" Name="Owner" Nullable="true" MaxLength="128" />
+    <Property Type="Int32" Name="OwnerID" Nullable="false" />
+  </ComplexType>
+</Schema>
